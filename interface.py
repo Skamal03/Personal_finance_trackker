@@ -170,6 +170,7 @@ def savings_deposit():
     b17 = Button(root, text="Back",command=back, width=25)
     b17.pack()
 
+#handling savings deposit
 def handling_savings_deposit():
 
     try:
@@ -186,13 +187,14 @@ def expense_menu():
     b2.destroy()
     b3.destroy()
 
-    b9 = Button(root, text="ADD EXPENSE", width=25,)
+    global b9,b10,b11,b12
+    b9 = Button(root, text="ADD EXPENSE", width=25, command=add_expense_menu)
     b9.pack()
 
-    b10 = Button(root, text="REMOVE EXPENSE", width=25)
+    b10 = Button(root, text="REMOVE EXPENSE", width=25, command=delete_expense_menu)
     b10.pack()
 
-    b11 = Button(root, text="DISPLAY EXPENSE", width=25)
+    b11 = Button(root, text="DISPLAY EXPENSE", width=25, command=dispaly_expense_menu)
     b11.pack()
 
     def back():
@@ -205,14 +207,149 @@ def expense_menu():
     b12 = Button(root, text="Back",command=back, width=25)
     b12.pack()
 
-    def add_expensse_menu():
-        pass
 
-    def delete_expense_menu():
-        pass
+#add expense menu
+def add_expense_menu():
+    b9.destroy()
+    b10.destroy()
+    b11.destroy()
+    b12.destroy()
 
-    def dispaly_expense_menu():
-        pass
+    global var
+    var = StringVar(value="Food")
+
+    food = Radiobutton(root, text="Food", variable=var, value="Food")
+    food.pack()
+    rent = Radiobutton(root, text="rent", variable=var, value="Rent")
+    rent.pack()
+    bill = Radiobutton(root, text="Bill", variable=var, value="Bill")
+    bill.pack()
+    clothing = Radiobutton(root, text="Clothing", variable=var, value="clothing")
+    clothing.pack()
+    grocery = Radiobutton(root, text="Grocery Item", variable=var, value="Grocery Item")
+    grocery.pack()
+    miscellaneous = Radiobutton(root, text="Miscellaneous", variable=var, value="Miscellaneous")
+    miscellaneous.pack()
+
+    global name_entry, date_entry, amount_entry
+    l1 = Label(root, text="NAME")
+    l1.pack()
+
+    name_entry = Entry(root, width=25)
+    name_entry.pack()
+
+    l2 = Label(root, text="DATE")
+    l2.pack()
+
+    date_entry = Entry(root, width=25)
+    date_entry.pack()
+
+    l3 = Label(root, text="AMOUNT")
+    l3.pack()
+
+    amount_entry = Entry(root, width=25)
+    amount_entry.pack()
+
+    b19 = Button(root, text="ADD", width=25, command=adding_expense)
+    b19.pack()
+
+    def back():
+        food.destroy()
+        rent.destroy()
+        bill.destroy()
+        clothing.destroy()
+        grocery.destroy()
+        miscellaneous.destroy()
+        l1.destroy()
+        name_entry.destroy()
+        l2.destroy()
+        date_entry.destroy()
+        l3.destroy()
+        amount_entry.destroy()
+        b19.destroy()
+        b20.destroy()
+        expense_menu()
+
+    b20 = Button(root, text="Back",command=back, width=25,)
+    b20.pack()
+
+
+#handling add_expense()
+def adding_expense():
+
+    name = name_entry.get()
+    date = date_entry.get()
+    amount = int(amount_entry.get())
+    category = var.get()
+
+    if name == "" or date == "" or amount == "":
+        messagebox.showinfo("ERROR", "Entry cannot be empty")
+        return
+
+    else:
+        expense.get_name(name)
+        expense.get_date(date)
+        expense.get_category(category)
+        expense.get_amount(amount)
+        expense.save_to_database()
+        messagebox.showinfo("SUCCESS","Expense successfully added!")
+
+#deleting expense
+def delete_expense_menu():
+    b9.destroy()
+    b10.destroy()
+    b11.destroy()
+    b12.destroy()
+
+    l1 = Label(root, text="Expense ID")
+    l1.pack()
+
+    global id_entry
+    id_entry = Entry(root, width=25)
+    id_entry.pack()
+
+    b21 = Button(root, text="DELETE", width=25, command=deleting_expense)
+    b21.pack()
+
+    def back():
+        l1.destroy()
+        id_entry.destroy()
+        b21.destroy()
+        b22.destroy()
+        expense_menu()
+
+    b22 = Button(root, text="Back",command=back, width=25)
+    b22.pack()
+
+#handling delete_expense()
+def deleting_expense():
+
+    expense_id = int(id_entry.get())
+
+    if expense_id <= 0:
+        messagebox.showerror("ERROR","invalid expense id")
+        return
+
+    else:
+        expense.delete_expense(expense_id)
+        messagebox.showinfo("SUCCESS","Expense successfully deleted")
+
+def dispaly_expense_menu():
+    b9.destroy()
+    b10.destroy()
+    b11.destroy()
+    b12.destroy()
+
+    list = Listbox(root)
+    list.pack()
+
+    def back():
+        list.destroy()
+        b23.destroy()
+        expense_menu()
+
+    b23 = Button(root, text="Back",command=back, width=25)
+    b23.pack()
 
 
 #main menu
