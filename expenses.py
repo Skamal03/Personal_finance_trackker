@@ -1,14 +1,12 @@
+from tkinter import messagebox
 from abc import ABC, abstractmethod
 import mysql.connector
+
 
 class Accounts(ABC):
 
     @abstractmethod
-    def deposit_in_account(self):
-        pass
-
-    @abstractmethod
-    def set_pin(self):
+    def deposit_amount(self, amount):
         pass
 
     @abstractmethod
@@ -17,36 +15,34 @@ class Accounts(ABC):
 
 class UserAccount(Accounts):
 
-    def __init__(self, account_number=567890123, account_balance=0.00, account_pin=0000):
+    def __init__(self, account_balance=000, account_number=567890123, account_pin=0000):
         self.acc_no = account_number
         self.acc_balance = account_balance
         self.__acc_pin = account_pin
 
-    def deposit_in_account(self,):
+    def deposit_amount(self, amount):
 
-        amount = int(input("enter amount to deposit"))
-        self.acc_balance += amount
-        print("Amount successfully deposited!")
+        if isinstance(amount, int):
+            self.acc_balance += amount
+            messagebox.showinfo("SUCCESS", "Amount successfully deposited!")
 
+        else:
+            messagebox.showinfo("FAIL", "enter correct values")
 
-    def set_pin(self):
+    def set_pin(self, old_pin, new_pin):
 
-        pin = int(input("Enter your pin: "))
-        tries = 0
+        if old_pin == self.__acc_pin:
 
-        while tries <= 3 :
+            self.__acc_pin = new_pin
+            messagebox.showinfo("SUCCESS", "pin changed successfully")
 
-            if pin == self.__acc_pin:
-                new_pin = int(input("Enter new pin"))
-                new_pin = self.__acc_pin
+        else:
 
-            else:
-                tries += 1
-                print("Wrong pin! you have", tries, "left")
-
+            messagebox.showinfo("WARNING", "you entered wrong pin!")
 
     def get_details(self):
-        return f"Account Number: {self.acc_no}\nAccount Balance: {self.acc_balance}"
+        messagebox.showinfo("DETAILS", f"Account Number: {self.acc_no}\nAccount Balance: {self.acc_balance}")
+
 
 class Savings:
 
@@ -54,18 +50,19 @@ class Savings:
         self.user_account = user_account
         self.savings = savings
 
-    def deposit_in_savings(self):
-        deposit = float(input("Enter an amount to deposit in savings: "))
+    def deposit_amount(self, deposit):
 
         if deposit > self.user_account.acc_balance:
-            print("Invalid amount. Not enough balance in your account.")
+            messagebox.showwarning("WARNING","Invalid amount. Not enough balance in your account.")
+
         else:
             self.user_account.acc_balance -= deposit
             self.savings += deposit
-            print("===== Amount successfully deposited in savings! =====")
+            messagebox.showinfo("SUCCESS","Amount successfully deposited in savings!")
 
     def get_details(self):
-        return f"Account Number: {self.user_account.acc_no}\nAccount Balance: {self.user_account.acc_balance}\nSavings Balance: {self.savings}"
+        messagebox.showinfo("DETAILS",f"Account Number: {self.user_account.acc_no}\nAccount Balance: {self.user_account.acc_balance}"
+                f"\nSavings Balance: {self.savings}")
 
 class Expense:
 
@@ -145,7 +142,7 @@ class Expense:
         mydb.commit()
         mydb.close()
 
-        print("===== Expense successfully saved! =====")
+        print("Expense successfully saved!")
 
     def delete_expense(self):
         mydb = mysql.connector.connect(
@@ -162,7 +159,7 @@ class Expense:
         mydb.commit()
         mydb.close()
 
-        print("===== Expense successfully deleted! =====")
+        print("Expense successfully deleted!")
 
     def display_expenses(self):
         mydb = mysql.connector.connect(
@@ -181,19 +178,7 @@ class Expense:
 
         mydb.close()
 
-if __name__ == "__main__":
-    user_account = UserAccount()
-    savings = Savings(user_account)
-    expense = Expense(user_account, savings)
-    user_account.deposit_in_account()
 
-
-    print(user_account.get_details())
-    savings.deposit_in_savings()
-    print(savings.get_details())
-    expense.get_name()
-    expense.get_category()
-    expense.get_date()
-    expense.get_amount()
-    expense.save_to_database()
-    expense.display_expenses()
+user_account = UserAccount()
+savings = Savings(user_account)
+expense = Expense(user_account, savings)
