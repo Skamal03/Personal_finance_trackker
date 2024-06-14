@@ -52,7 +52,10 @@ class Savings:
 
     def deposit_amount(self, deposit):
 
-        if deposit > self.user_account.acc_balance:
+        if isinstance(deposit,str):
+            messagebox.showerror("ERROR","Invalid entry")
+
+        elif deposit > self.user_account.acc_balance:
             messagebox.showwarning("WARNING","Invalid amount. Not enough balance in your account.")
 
         else:
@@ -74,49 +77,26 @@ class Expense:
         self.date = date
         self.name = name
 
-    def get_name(self):
-        self.name = input("Enter name of the expense: ")
+    def get_name(self,name):
+        self.name = name
 
-    def get_category(self):
-        while True:
-            print("Select a category from the options below:")
-            print(" 1. Food\n 2. Rent\n 3. Bill\n 4. Miscellaneous")
-            category = int(input("Enter a category number: "))
+    def get_category(self,category):
+        self.category = category
 
-            if category == 1:
-                self.category = "Food"
-                break
-            elif category == 2:
-                self.category = "Rent"
-                break
-            elif category == 3:
-                self.category = "Bill"
+    def get_date(self,date):
+        self.date = date
 
-            elif category == 4:
-                self.category = "Clothing"
-                break
-
-            elif category == 5:
-                self.category = "Miscellaneous"
-                break
-            else:
-                print("===== Wrong input, please enter again! =====")
-
-    def get_date(self):
-        self.date = input("Enter the date (DD-MM-YYYY): ")
-
-    def get_amount(self):
-        self.amount = float(input("Enter the amount: "))
+    def get_amount(self, amount):
+        self.amount = amount
 
     def save_to_database(self):
 
         if self.amount > self.user_account.acc_balance:
-            print("Not enough balance.")
-            use_savings = input("Use savings? (Y/N): ")
+            answer = messagebox.askyesno("ERROR","Not enough balance\nDo you want to use savings?")
 
-            if use_savings.lower() == 'y':
+            if answer:
                 if self.amount > (self.user_account.acc_balance + self.savings.savings):
-                    print("Not enough balance in savings.")
+                    messagebox.showinfo("ERROR","Not enough balance in savings.")
                     return
                 else:
                     self.savings.savings -= (self.amount - self.user_account.acc_balance)
@@ -144,7 +124,7 @@ class Expense:
 
         print("Expense successfully saved!")
 
-    def delete_expense(self):
+    def delete_expense(self,id):
         mydb = mysql.connector.connect(
             host="localhost",
             user="root",
@@ -153,7 +133,7 @@ class Expense:
         )
         mycursor = mydb.cursor()
 
-        expense_id = int(input("Enter expense ID to delete: "))
+        expense_id = id
         query = "DELETE FROM expenses WHERE id=%s"
         mycursor.execute(query, (expense_id,))
         mydb.commit()
@@ -177,7 +157,6 @@ class Expense:
             print(expense)
 
         mydb.close()
-
 
 user_account = UserAccount()
 savings = Savings(user_account)
