@@ -15,7 +15,7 @@ class Accounts(ABC):
 
 class UserAccount(Accounts):
 
-    def __init__(self, account_balance=000, account_number=567890123, account_pin=0000):
+    def __init__(self, account_balance=000, account_number=5680456754, account_pin=0000):
         self.acc_no = account_number
         self.acc_balance = account_balance
         self.__acc_pin = account_pin
@@ -152,11 +152,13 @@ class Expense:
 
         query = "SELECT * FROM expenses"
         mycursor.execute(query)
+        records = mycursor.fetchall()
 
-        for expense in mycursor:
-            print(expense)
+        for record in records:
+            print(record)
 
         mydb.close()
+
 
 user_account = UserAccount()
 savings = Savings(user_account)
