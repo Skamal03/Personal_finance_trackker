@@ -4,11 +4,19 @@ from tkinter import *
 root = Tk()
 
 root.title("personalfinance tracker")
-root.geometry("500x500")
+root.geometry("600x500")
+root.config(bg="orange")
+
+#main label
+label = Label(root, text="PERSONAL FINANCE TRACKER", font="Calibri 30 bold")
+label.pack(pady=20,fill=X)
+label.config(bg="light grey")
+
 
 #accounts menu
 def account_menu():
 
+    f1.destroy()
     b1.destroy()
     b2.destroy()
     b3.destroy()
@@ -121,6 +129,8 @@ def handling_set_pin():
 
 #savings menu
 def savings_menu():
+
+    f1.destroy()
     b1.destroy()
     b2.destroy()
     b3.destroy()
@@ -183,6 +193,8 @@ def handling_savings_deposit():
 
 #expense menu
 def expense_menu():
+
+    f1.destroy()
     b1.destroy()
     b2.destroy()
     b3.destroy()
@@ -335,39 +347,75 @@ def deleting_expense():
         messagebox.showinfo("SUCCESS","Expense successfully deleted")
 
 def dispaly_expense_menu():
+
+    f1.destroy()
     b9.destroy()
     b10.destroy()
     b11.destroy()
     b12.destroy()
 
-    list = Listbox(root)
-    list.pack()
+    global list_box
+    list_box = Listbox(root)
+    list_box.pack(padx=20, pady=20)
+
+    display_expenses()
 
     def back():
-        list.destroy()
+        list_box.destroy()
         b23.destroy()
         expense_menu()
 
     b23 = Button(root, text="Back",command=back, width=25)
     b23.pack()
 
+#handling expense
+def display_expenses():
+    mydb = mysql.connector.connect(
+        host="localhost",
+        user="root",
+        password="6090",
+        database="expense"
+    )
+    mycursor = mydb.cursor()
+
+    query = "SELECT * FROM expenses"
+    mycursor.execute(query)
+    records = mycursor.fetchall()
+
+    list_box.delete(0,END)
+    for record in records:
+        list_box.insert(END, record)
+
+    mydb.close()
+
 
 #main menu
 def main():
-    global b1,b2,b3
-    b1 = Button(root, text="ACCOUNT", width="25", command=account_menu)
-    b1.pack()
-    b2 = Button(root, text="SAVINGS", width="25", command=savings_menu)
-    b2.pack()
-    b3 = Button(root, text="EXPENSE", width="25", command=expense_menu)
-    b3.pack()
 
+    global f1,b1,b2,b3
+    f1 = Frame(root, bg="orange")
+    f1.pack(expand=TRUE, anchor=CENTER)
+    b1 = Button(f1, text="ACCOUNT", width=25, height=2, bg="light grey", command=account_menu)
+    b1.pack(padx=10, pady=10, anchor=CENTER)
+    b2 = Button(f1, text="SAVINGS", width=25, height=2, bg="light grey", command=savings_menu)
+    b2.pack(padx=10, pady=10, anchor=CENTER)
+    b3 = Button(f1, text="EXPENSE", width=25, height=2, bg="light grey", command=expense_menu)
+    b3.pack(padx=10, pady=10, anchor=CENTER)
 
-b1 = Button(root,text="ACCOUNT", width="25", command=account_menu)
-b1.pack()
-b2 = Button(root, text="SAVINGS", width="25", command=savings_menu)
-b2.pack()
-b3 = Button(root, text="EXPENSE", width="25", command=expense_menu)
-b3.pack()
+f1 = Frame(root, bg="orange")
+f1.pack(expand=TRUE, anchor=CENTER)
+b1 = Button(f1,text="ACCOUNT", width=25, height=2, bg="light grey", command=account_menu)
+b1.pack(padx=10,pady=10, anchor=CENTER)
+b2 = Button(f1, text="SAVINGS", width=25, height=2, bg="light grey", command=savings_menu)
+b2.pack(padx=10,pady=10, anchor=CENTER)
+b3 = Button(f1, text="EXPENSE", width=25, height=2, bg="light grey", command=expense_menu)
+b3.pack(padx=10,pady=10, anchor=CENTER)
+
+#making taskbar
+text = StringVar()
+text.set("group project\t\t\tdeveloped by hamza and sannan\t\t\t56804,56754")
+taskbar = Label(root, textvariable= text)
+taskbar.config(bg="light grey")
+taskbar.pack(side=BOTTOM, fill=X)
 
 root.mainloop()
