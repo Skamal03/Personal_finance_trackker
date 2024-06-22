@@ -7,9 +7,10 @@ import csv
 class Accounts(ABC):
 
     @abstractmethod
-    def deposit_amount(self, amount):
+    def deposit_amount(self):
         pass
 
+    @abstractmethod
     def retrieve(self):
         pass
 
@@ -25,7 +26,7 @@ class UserAccount(Accounts):
         self.acc_balance = account_balance
         self.__acc_pin = account_pin
 
-    def retrive(self):
+    def retrieve(self):
 
         with open("balance.csv", "r") as file:
             reader = csv.reader(file)
@@ -62,7 +63,6 @@ class UserAccount(Accounts):
                 writer = csv.writer(file)
                 writer.writerow([date, amount, 0, self.acc_balance])
 
-
         else:
             messagebox.showinfo("FAIL", "enter correct values")
 
@@ -71,13 +71,13 @@ class UserAccount(Accounts):
         messagebox.showinfo("DETAILS", f"Account Name:{self.acc_name}\nAccount Number: {self.acc_no}"
                                        f"\nAccount Balance: {self.acc_balance}")
 
-class Savings:
+class Savings(Accounts):
 
     def __init__(self, user_account, savings=00):
         self.user_account = user_account
         self.savings = savings
 
-    def retrive(self):
+    def retrieve(self):
 
         with open("Savings_deposit.csv", "r") as file:
             reader = csv.reader(file)
