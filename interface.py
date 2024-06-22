@@ -105,7 +105,7 @@ def handling_deposit():
         messagebox.showerror("Error", "Invalid amount. Please enter a valid amount")
 
 
-#change pin menu
+#withdraw menu
 def withdraw_menu():
 
     f2.destroy()
