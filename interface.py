@@ -4,8 +4,8 @@ from tkinter import ttk
 
 root = Tk()
 
-user_account.retrive()
-savings.retrive()
+user_account.retrieve()
+savings.retrieve()
 
 root.title("personalfinance tracker")
 root.geometry("700x600")
@@ -13,7 +13,7 @@ root.config(bg="steel blue")
 
 #main label
 label = Label(root, text="PERSONAL FINANCE TRACKER", font="Calibri 30 bold")
-label.pack(pady=20,fill=X)
+label.pack(pady=20, fill=X)
 label.config(fg="white", bg="light blue")
 
 
@@ -31,16 +31,16 @@ def account_menu():
     f2.pack(expand=TRUE, anchor=CENTER)
 
     b4 = Button(f2, text="DEPOSIT MONEY", width=25, height=2, bg="light grey", command=deposit_menu)
-    b4.pack(padx=3,pady=3)
+    b4.pack(padx=3, pady=3)
 
     b5 = Button(f2, text="WITHDRAW", width=25,height=2, bg="light grey", command=withdraw_menu)
-    b5.pack(padx=3,pady=3)
+    b5.pack(padx=3, pady=3)
 
     b24 = Button(f2, text="TRANSACTION HISTORY", width=25,height=2, bg="light grey", command=displaying_transactions)
-    b24.pack(padx=3,pady=3)
+    b24.pack(padx=3, pady=3)
 
     b6 = Button(f2, text="CHECK DETAILS", width=25,height=2, bg="light grey", command=user_account.get_details)
-    b6.pack(padx=3,pady=3)
+    b6.pack(padx=3, pady=3)
 
     def back():
         f2.destroy()
@@ -105,7 +105,7 @@ def handling_deposit():
         messagebox.showerror("Error", "Invalid amount. Please enter a valid amount")
 
 
-#withdraw menu
+#withdra menu
 def withdraw_menu():
 
     f2.destroy()
@@ -157,12 +157,14 @@ def withdraw_menu():
 
 #handling set_pin()
 def handling_withdraw():
+    try:
+        amount = int(amount_e.get())
+        date = date_e.get()
+        pin = int(pin_e.get())
+        user_account.withdraw(amount, date, pin)
 
-    amount = int(amount_e.get())
-    date = date_e.get()
-    pin = int(pin_e.get())
-    user_account.withdraw(amount, date, pin)
-
+    except:
+        messagebox.showerror("ERROR","invalid entry")
 
 #dispaying transaction history in a treeview
 def displaying_transactions():
